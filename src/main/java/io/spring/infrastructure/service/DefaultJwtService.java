@@ -25,7 +25,13 @@ public class DefaultJwtService implements JwtService {
       @Value("${jwt.secret}") String secret, @Value("${jwt.sessionTime}") int sessionTime) {
     this.sessionTime = sessionTime;
     signatureAlgorithm = SignatureAlgorithm.HS512;
-    this.signingKey = new SecretKeySpec(secret.getBytes(), signatureAlgorithm.getJcaName());
+    byte[] keyBytes = secret.getBytes();
+    if (keyBytes.length < 64) {
+      byte[] paddedKey = new byte[64];
+      System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 64));
+      keyBytes = paddedKey;
+    }
+    this.signingKey = new SecretKeySpec(keyBytes, signatureAlgorithm.getJcaName());
   }
 
   @Override
@@ -41,8 +47,8 @@ public class DefaultJwtService implements JwtService {
   public Optional<String> getSubFromToken(String token) {
     try {
       Jws<Claims> claimsJws =
-          Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
-      return Optional.ofNullable(claimsJws.getBody().getSubject());
+          Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token);
+      return Optional.ofNullable(claimsJws.getPayload().getSubject());
     } catch (Exception e) {
       return Optional.empty();
     }
