@@ -17,6 +17,24 @@ The GraphQL schema is https://github.com/gothinkster/spring-boot-realworld-examp
 ![](graphql-schema.png)
 
 And this implementation is using [dgs-framework](https://github.com/Netflix/dgs-framework) which is a quite new java graphql server framework.
+
+# Spring Boot 3.x Upgrade
+
+This application has been upgraded to **Spring Boot 3.1.12** with **Java 17** support. Key highlights of the upgrade:
+
+## Major Changes
+- **Jakarta EE Migration**: All `javax.*` imports migrated to `jakarta.*` (21 files updated)
+- **Spring Security Modernization**: Replaced deprecated `WebSecurityConfigurerAdapter` with `SecurityFilterChain` bean pattern
+- **Updated Dependencies**:
+  - Spring Boot: 2.6.3 → 3.1.12
+  - MyBatis Spring Boot Starter: 2.2.2 → 3.0.3
+  - Netflix DGS Framework: 4.9.21 → 9.1.1
+  - JJWT: 0.11.2 → 0.12.6
+  - REST Assured: 4.5.1 → 5.5.0
+  - Gradle: 7.4 → 8.5
+
+For detailed migration information, see [MIGRATION.md](MIGRATION.md).
+
 # How it works
 
 The application uses Spring Boot (Web, Mybatis).
@@ -44,7 +62,7 @@ It uses a ~~H2 in-memory database~~ sqlite database (for easy local test without
 
 # Getting started
 
-You'll need Java 11 installed.
+You'll need Java 17 installed.
 
     ./gradlew bootRun
 
